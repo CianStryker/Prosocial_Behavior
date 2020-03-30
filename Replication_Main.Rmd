@@ -25,8 +25,6 @@ library(spatialreg)
 \textbf{Abstract}
 \end{center}
 
-\hfill\break
-
 Hager, Krakowsi, and Schaub show that exposure to ethnic violence negatively affects prosocial behavior to both the opposing ethnic group, but also one’s own. I was almost entirely successful in replicating their main statistical models that demonstrate the negative effect the 2010 Osh, Kyrgyzstan ethnic riots had on prosocial behavior, but their work does have some replication issues. My own extensions explore confounders for their Uzbek sample—the victimized ethnic group— and more intensely explore their Kyrgyz—the aggressor ethnic group— sample. I find a stronger confounder in common language usage and also identify that for affected Kyrgyz, prosocial behavior was actually partially positively affected by victimization, which is contradictory to the authors’ argument.  My results demonstrate that the effects of ethnic violence on community relations differs on a case-by-case basis and arguing that general trends exist is problematic. 
 
 \pagebreak
@@ -78,7 +76,7 @@ The authors performed a survey of 880 Uzbeks and 220 Kyrgyz living in Osh betwee
 [^20]: “Report of the Independent International Commission of Inquiry into the Events in Southern Kyrgyzstan in June 2010” 2011
 [^21]: KIC 2011
 
-\hill\break
+\hfill\break
 
 \begin{center}
 \textbf{Main Models}
@@ -281,6 +279,9 @@ cat("}") # for the end of the scalebox
 
 \end{center}
 
+\hfill\break
+\hfill\break
+
 Table 1 demonstrates the OLS regression results explaining all five prosocial outcomes as a result of the destruction dummy, common language usage, and the ethnicity of one’s employer. Of note is that the destruction dummy still has a statistically significant negative correlation to prosocial behavior. That being said, the effect size is diluted across all five measures, which did not occur when the authors tested for their original confounders. Also of note is that common language use also has a statistically significant but positive correlation to all five prosocial measures. No employer ethnicity had consistently significant results, however, which suggests this particular measure does not affect prosociality as strongly as either common language usage or victimization.
 
 
@@ -325,6 +326,9 @@ cat("}") # for the end of the scalebox
 
 
 \end{center}
+
+\hfill\break
+\hfill\break
 
 Table 2 contains OLS regressions that explain prosocial outcomes as a result of only two variables: victimization and common language usage. Table 2 also includes an interaction between these two variables. The negative effect of victimization becomes even more muted than even Table 1’s victimization coefficients. For PD outgroup, the coefficient is no statistically significant. Other measures also see their significance decreases as well. The same is true, however, for common language usage which is no longer statistically significant for either in or out-group PD scores in comparison to Table 1. None of the interaction coefficients are significant either. Overall, I believe that Table 2 further supports the author’s initial findings that victimization has a strong negative correlation to Uzbek prosocial behavior. I would argue, though, that common language use is a more valid confounder than the authors’ original confounders and that its inclusion is important to understanding how personal prosociality behavior might affect the results of the paper more broadly. 
 
@@ -544,6 +548,9 @@ cat("}") # for the end of the scalebox
 ```
 
 \end{center}
+
+\hfill\break
+\hfill\break
 
 Table 3 measures prosocial outcomes as a result of victimization and the five confounders the authors created in their original paper through OLS regressions. The results are mixed. First of all, almost none of the confounders have statistically significant results and the results are on par with the author’s findings for confounder effects. When viewing the destruction dummy, however, a few key differences to the authors’ findings are clear. Again PD Out-group behavior is statistically significant and positive in nature. Interestingly, PD In-group prosocial behavior is statistically negative, which suggests affected Kyrgyz have very different attitudes towards cooperation with their coethnics and non-coethnics. No other measure is statistically significant though, which differs from the authors’ original findings for Uzbeks. 
 
