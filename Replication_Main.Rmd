@@ -1,8 +1,8 @@
 ---
-title: "Replication Project"
+title: 'Replication of "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan"'
 author: "Cian Stryker"
-date: "3/17/2020"
-output: pdf_document
+output: bookdown::pdf_document2
+toc: false
 ---
 
 ```{r setup, include=FALSE}
@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = FALSE)
 # Loading all libraries
 # that I'll need. 
 
+library(citr)
+library(bookdown)
 library(stargazer)
 library(tidyverse)
 library(AER)
@@ -21,9 +23,17 @@ library(tseries)
 library(spatialreg)
 ```
 
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+
 \begin{center}
 \textbf{Abstract}
 \end{center}
+
 
 Hager, Krakowsi, and Schaub show that exposure to ethnic violence negatively affects prosocial behavior to both the opposing ethnic group, but also one’s own. I was almost entirely successful in replicating their main statistical models that demonstrate the negative effect the 2010 Osh, Kyrgyzstan ethnic riots had on prosocial behavior, but their work does have some replication issues. My own extensions explore confounders for their Uzbek sample—the victimized ethnic group— and more intensely explore their Kyrgyz—the aggressor ethnic group— sample. I find a stronger confounder in common language usage and also identify that for affected Kyrgyz, prosocial behavior was actually partially positively affected by victimization, which is contradictory to the authors’ argument.  My results demonstrate that the effects of ethnic violence on community relations differs on a case-by-case basis and arguing that general trends exist is problematic. 
 
@@ -35,17 +45,21 @@ Hager, Krakowsi, and Schaub show that exposure to ethnic violence negatively aff
 
 I will be replicating the paper "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan" written by Anselm Hager, Krzysztof Krakowski, and Max Schaub.[^1] Using survey data gathered in Osh, Kyrgyzstan after the 2010 ethnic riots that includes 1200 responses, this paper explores the question of whether exposure to ethnic riots has a negative effect on both in and out group prosocial behavior. Previous literature on prosocial behavior following ethnic violence suggests that prosocial behavior towards the aggressor group is negatively affected. Some literature also suggests that prosocial behavior towards the in-group, or the victim group, should improve as a result of shared conflict. This paper finds, however, that prosocial behavior for both in and out groups are negatively affected. The authors measure prosocial behavior by having their research subjects complete a prisoner's dilemma (PD) scenario and dictator’s game (DG) hypothetical to measure prosocial behavior towards both the in-group and out-group. After running linear regressions measuring the outcomes of these tests as a result of being affected in the riots, they find that there is a strong negative effect on prosocial behavior towards both the in-group and out-group. Using the same models, they test for confounders and then explore an instrumental variable—distance to armored personnel carrier (APC), which were used in the riots— to further improve their robustness testing. Throughout this testing they find their original conclusions hold true and they offer theoretical, qualitative reasoning for why prosocial behavior is negatively affected towards both in and out group members. 
 
-I have replicated the key models and figures from the paper using R to perform all statistical analysis and visualizations.[^2] The replications are also based off of the raw data and code the authors provided and uploaded at the American Political Science Review Dataverse. [^3] My specific replication code, results, and later extensions are available on Github. [^4] The replications that I have included and will discuss in this paper are the key models the authors of the original paper use to evidence their key finding of universal lower prosocial behavior. I would like to note, however, that I have not included figures from the original paper that were created using GIS software or other, non-R, programs. I have also not included any models from the author’s Appendix that are not relevant to my own extension models, but I will include a link to their online appendix as well. [^5] I have successfully replicated almost all of the author’s key figures with the exception of certain instrumental regressions that rely on spatial weights. While I have found a non-replicable issue with the original paper’s work, I argue that their findings are still strong despite this flaw. I also argue that there are certain areas of their data that should be more thoroughly explored. 
+I have replicated the key models and figures from the paper using R to perform all statistical analysis and visualizations.[^2] The replications are also based off of the raw data and code the authors provided and uploaded at the American Political Science Review Dataverse.[^3] My specific replication code, results, and later extensions are available on Github.[^4] The replications that I have included and will discuss in this paper are the key models the authors of the original paper use to evidence their key finding of universal lower prosocial behavior. I would like to note, however, that I have not included figures from the original paper that were created using GIS software or other, non-R, programs. I have also not included any models from the author’s Appendix that are not relevant to my own extension models, but I will include a link to their online appendix as well.[^5] I have successfully replicated almost all of the author’s key figures with the exception of certain instrumental regressions that rely on spatial weights. While I have found a non-replicable issue with the original paper’s work, I argue that their findings are still strong despite this flaw. I also argue that there are certain areas of their data that should be more thoroughly explored. 
 I have chosen to explore these aforementioned areas through my own extension models. This is not to say that my extensions are exhaustive, but they illustrate areas of the author’s original work that I believe warrant greater attention. The author’s models focus primarily on how the Uzbek sample of their survey data was affected by the riots in terms of prosocial behavior. The majority of their robustness testing focuses on this sample as well. The authors explored confounders besides victimization that might explain prosocial behavioral outcomes including wealth, community state capacity, community policing, and accessibility. I believe they neglected to include their subject’s general attitude towards outgroup members as a potential confounder even though they measure for this in their survey. In extending their analysis to include this measure, I found that while victimization is still statistically significant, a subject’s set prosocial attitude intuitively plays an influential role in prosocial outcome. I also believe the authors generally neglected to explore their Kyrgyz comparative sample as extensively as they did their Uzbek sample. Analyzing prosocial behavior among the Kyrgyz sample with the same methodological approach the authors took to with the Uzbek sample, reveals a partial improvement in prosocial behavior towards the outgroup, which is somewhat contradictory to the author’s findings. I believe the authors purposefully presented their Kyrgyz modelling in a manner that would ignore this complication of their narrative. 
 
 This paper will consist of a review of the relevant literature for understanding scholarship on prosocial behavior and the ethnic riots of Osh, Kyrgyzstan. It will also spend some time to introduce and describe the survey data that the authors provided because this paper is non-observational and more attention should be paid to the data itself, the author’s data gathering methodology, and the general demographical spread on their survey sample. Then there will be a discussion and analysis of the author’s key models and findings with attention paid to areas of potential weaknesses and non-replication. This will then lead into a presentation of my own extensions and what they add to both the original paper’s findings, but also to the broader fields of ethnic riots and Central Asian studies. All replications and extensions can be found in the tables and figures section with all code included in the appendix available online. [^6]
 
+
+
 [^1]: Hager, Krakowski, and Schaub 2019
-[^2]: R Core Team (2019). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.URL https://www.R-project.org/.
-[^3]: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE
-[^4]: https://github.com/CianStryker/Replication_Data
-[^5]: https://static.cambridge.org/content/id/urn:cambridge.org:id:article:S000305541900042X/resource/name/S000305541900042Xsup001.pdf
-[^6]: https://github.com/CianStryker/Replication_Data
+[^2]: R Core Team (2019)
+[^3]: \href{https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE}{{\color{blue}{\underline{Original Paper's Code}}}}
+[^4]: \href{https://github.com/CianStryker/Replication_Data}{{\color{blue}{\underline{Replication Github}}}}
+[^5]:  \href{https://static.cambridge.org/content/id/urn:cambridge.org:id:article:S000305541900042X/resource/name/S000305541900042Xsup001.pdf}{{\color{blue}{\underline{Original Paper's Appendix}}}}
+[^6]: \href{https://github.com/CianStryker/Replication_Data}{{\color{blue}{\underline{Replication Github}}}}
+
+
 
 
 \hfill\break
@@ -73,7 +87,7 @@ The authors performed a survey of 880 Uzbeks and 220 Kyrgyz living in Osh betwee
 [^17]: Allworth 2013; Liu 2012
 [^18]: Huskey 2003
 [^19]: Huskey 2003
-[^20]: “Report of the Independent International Commission of Inquiry into the Events in Southern Kyrgyzstan in June 2010” 2011
+[^20]: KIC 2011
 [^21]: KIC 2011
 
 \hfill\break
@@ -105,13 +119,14 @@ Figure 9 (“Effect of Riot Destruction on Losses”) is the author’s last mai
 \end{center}
 
 I believe there are a few areas that could be expanded upon in this paper that the authors did not fully explore. A fundamental issue with extending this paper’s findings is that it is non-observational and was published recently in late 2019, which means that I cannot either incorporate additional data or incorporate new additional literature that suggests a weakness in the authors’ methodological approach. Even so, there are two areas where I feel more exploration of the data is warranted or where fundamental assumptions can be challenged. These areas would be a more in-depth exploration of prosocial confounding variables for the Uzbek data and a far more robust exploration of the Kyrgyz sample of the survey data.  
-I find that the author’s exploration of confounding variables for the Uzbek subset of the data is limited in its scope. They combine a variety of survey scores together to create their confounders that might explain victimization and/or prosocial behavior, but I believe other variables should be included that more directly explain prosocial behavioral scores. Namely, the survey variables of use of common language and ethnicity of employer should be more robustly tested. Using the common language of the outgroup directly measures prosocial behavior because individuals choose to opt into or out of this behavior. More so than any other variable measured in the authors’ survey, this variable directly measures an individual’s overall prosociality. The ethnicity of one’s employer is also important because if one’s employer is of the opposite ethnic group, this mandates interaction with the out-group, which might also generate higher prosocial behavior. My Table 1 demonstrates the OLS regression results explaining all five prosocial outcomes as a result of the destruction dummy, common language usage, and the ethnicity of one’s employer. Of note is that the destruction dummy still has a statistically significant negative correlation to prosocial behavior. That being said, the effect size is diluted across all five measures, which did not occur when the authors tested for their original confounders. Also of note is that common language use also has a statistically significant but positive correlation to all five prosocial measures. No employer ethnicity had consistently significant results, however, which suggests this particular measure does not affect prosociality as strongly as either common language usage or victimization.  
+
+I find that the author’s exploration of confounding variables for the Uzbek subset of the data is limited in its scope. They combine a variety of survey scores together to create their confounders that might explain victimization and/or prosocial behavior, but I believe other variables should be included that more directly explain prosocial behavioral scores. Namely, the survey variables of use of common language and ethnicity of employer should be more robustly tested. Using the common language of the outgroup directly measures prosocial behavior because individuals choose to opt into or out of this behavior. More so than any other variable measured in the authors’ survey, this variable directly measures an individual’s overall prosociality. The ethnicity of one’s employer is also important because if one’s employer is of the opposite ethnic group, this mandates interaction with the out-group, which might also generate higher prosocial behavior. My Table 1 shows the OLS regression results explaining all five prosocial outcomes as a result of the destruction dummy, common language usage, and the ethnicity of one’s employer. Of note is that the destruction dummy still has a statistically significant negative correlation to prosocial behavior. That being said, the effect size is diluted across all five measures, which did not occur when the authors tested for their original confounders. Also of note is that common language use also has a statistically significant but positive correlation to all five prosocial measures. No employer ethnicity had consistently significant results, however, which suggests this particular measure does not affect prosociality as strongly as either common language usage or victimization.  
 
 I decided to expand on Table 1’s results by isolating just the destruction dummy and common language usage in Table 2. I rerun the OLS regressions from Table 1 with only these two variables, but include an interaction between the two. These results are interesting because the negative effect of victimization becomes even more muted and for PD outgroup, the coefficient outright loses its statistical significance. Other measures see their significance decreases as well. The same is true, however, for common language usage which is no longer statistically significant for either in or out-group PD scores. None of the interaction coefficients are significant either. Overall, I believe that Table 1 and 2 generally further support the author’s initial findings that victimization has a strong negative correlation to Uzbek prosocial behavior. I would argue, though, that common language use is a more valid confounder than the authors’ original confounders and that its inclusion is important to understanding how personal prosociality behavior might affect the results of the paper more broadly. 
 
 I would like to emphasize that I the paper’s argument of Uzbek prosocial behavior towards both the in and out-groups was negatively affected. I argue, however, that the same is not true for their Kyrgyz sample.  The survey data includes 222 surveys of Kyrgyz citizens of Osh and within this amount over a third were negatively affected by the ethnic riots. This amount is much less than the nearly half out of 878 Uzbeks citizens that were affected, but they form an interesting point of comparison for the study, which the authors themselves note. They use the affected Kyrgyz sample as a comparative only by regressing their prosocial behavior outcomes using the instrumental variable that relies on spatial weights, which can be seen in their figure A.17 in their online Appendix. I am critical of this approach because their instrumental variable with spatial weights is non-replicable. Also, their instrumental variable was a robustness test to support Figure 5, but the authors decided to not test the Kyrgyz sample with OLS regressions. Similarly, in looking at their figure A.17, it is noticeable that the authors chose to only include the results of the Prosociality Index as opposed to showing the results for all five prosocial measures. Between non-replicability issues, the admission of four prosocial measures, and the fact that this comparative model was relegated to the Appendix, despite being referenced as a useful comparison in the paper, I decided that a more robust exploration of the Kyrgyz sample was warranted. 
 
-Model 1 is the first extension that focuses on Kyrgyz prosocial behavior. I use the same code and approach that the original authors do for their Figure 5 but now on the Kyrgyz subset of the data instead. The results are interesting for a few reasons. The main reason being that for the prisoner’s dilemma outgroup scores there is a noticeable positive correlation to victimization. This suggests that Kyrgyz who were affected by the riots have on average higher levels of prosocial behavior towards Uzbeks. The variance is fairly high, but the positive nature of the coefficient is constant. For the other measures the coefficients are negative like the author’s Figure 5, but noticeably less negative. This suggests that at least for the Kyrgyz portion of the authors’ survey, prosocial behavior did not universally decrease, but that at least within the prisoner’s dilemma—the measure of cooperation—affected Kyrgyz are more willing to cooperate with Uzbeks than non-affected. 
+\@ref(fig:Model 1) is the first extension that focuses on Kyrgyz prosocial behavior. I use the same code and approach that the original authors do for their Figure 5 but now on the Kyrgyz subset of the data instead. The results are interesting for a few reasons. The main reason being that for the prisoner’s dilemma outgroup scores there is a noticeable positive correlation to victimization. This suggests that Kyrgyz who were affected by the riots have on average higher levels of prosocial behavior towards Uzbeks. The variance is fairly high, but the positive nature of the coefficient is constant. For the other measures the coefficients are negative like the author’s Figure 5, but noticeably less negative. This suggests that at least for the Kyrgyz portion of the authors’ survey, prosocial behavior did not universally decrease, but that at least within the prisoner’s dilemma—the measure of cooperation—affected Kyrgyz are more willing to cooperate with Uzbeks than non-affected. 
 
 To further explore this trend, I follow the authors’ approach to their Table 1 to create my Table 3 that measures prosocial outcomes as a result of victimization and the five confounders the authors created in their original paper. The results of my Table 3 are mixed. First of all, almost none of the confounders have statistically significant results and the results are on par with the author’s findings for confounder effects. When viewing the destruction dummy, however, a few key differences to the authors’ findings are clear. Again PD Out-group behavior is statistically significant and positive in nature. Interestingly, PD In-group prosocial behavior is statistically negative, which suggests affected Kyrgyz have very different attitudes towards cooperation with their coethnics and non-coethnics. No other measure is statistically significant though, which differs from the authors’ original findings for Uzbeks. 
 
@@ -180,6 +195,8 @@ Kopstein, Jeffery S., and Jason Wittenberg. 2018. Intimate Violence: Anti-Jewish
 Liu, Morgan Y. 2012. Under Solomon’s Throne: Uzbek Visions of Renewal in Osh. Pittsburgh: University of Pittsburgh Press.
 
 Mitra, Anirban, and Debraj Ray. 2014. “Implications of an Economic Theory of Conflict: Hindu-Muslim Violence in India.” Journal of Political Economy 122 (4): 719–65.
+
+R Core Team (2013). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.URL http://www.R-project.org/.
 
 Raleigh, Clionadh, Andrew Linke, Havard Hegre, and Joakim Karlsen. 2010. “Introducing ACLED: An Armed Conflict Location and Event Dataset Special Data Feature.” Journal of Peace Research 47 (5): 651–60.
 
@@ -252,7 +269,7 @@ model55 <- lm(cooperation_index ~ affected + comm_lang_use + education + comm_em
 \begin{center}
 \textbf{Table 1: Uzbek Confounders}
 
-```{r Table 1 Stargazer, results = "asis"}
+```{r Table 1, results = "asis"}
 
 # Alright so this is weird. I know they are using stargazer 
 # to make the really nice looking table in the paper. I don't know
