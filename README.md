@@ -4,6 +4,8 @@ This is my replicattion of the paper "Ethnic Riots and Prosocial Behavior: Evide
 
 In my paper I discuss the original authors' findings and place their theoretical model within the literature on ethnic violence and the 2010 Osh riots. I then expand on certain areas of their work that I believe warranted additional attention. Namely, I found that the effects of victimization on Kyrgyz resulted in different prosocial outcomes than the victimized Uzbeks. Kyrgyz who were exposed to violence in the riots expressed positive prosocial behavior towards Uzbeks (the out-group), This somewhat complicates the original authors' conclusions, but I believe this effect is important to note for understanding the larger effects of ethnic violence. 
 
+My paper can be found within this repo or can also be viewed here: https://cianstryker.shinyapps.io/Replication/
+
 # File Guide
 
 - The paper itself is simply listed as "Paper". This includes both the pdf and the rmarkdown page.
