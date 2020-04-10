@@ -6,9 +6,9 @@ In my paper I discuss the original authors' findings and place their theoretical
 
 # File Guide
 
-- The paper itself is listed as simply "Paper". 
+- The paper itself is simply listed as "Paper". This includes both the pdf and the rmarkdown page.
 
-- The various datasets can be found under the file called "Data", but this data first and foremost belongs to the original authors. 
+- The various datasets can be found under the file called "Data", but all data first and foremost belongs to the original authors. 
 
 - My code for both my extensions and my replications of the relevant original figures can be found under the "Code" file. 
 
