@@ -1,0 +1,778 @@
+---
+title: "Replications of Original Figures"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Loading all libraries
+# that I'll need. 
+
+library(spdep) 
+library(tseries)
+library(spatialreg)
+library(foreign)
+library(plyr)
+library(AER)
+library(data.table)
+library(gt)
+library(stargazer)
+library(tidyverse)
+```
+
+```{r Loading}
+
+# My loading code. 
+
+load("~/Replication_Project/Data/kyrgyzstan.RData")
+data <- table
+
+```
+
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+
+```{r, Figure 4}
+
+# So I figured it would be easy to replicate
+# thier Figure 4 even though they don't give
+# any replicable code. I just make some
+# columns and then use gt to make it look like
+# thier table. 
+
+f4_1 <- c("+", "-", "-", "+")
+f4_2 <- c(60, 80, 20, 100)
+f4_3 <- c(60, 80, 100, 20)
+f4_4 <- c("-", "+", "-", "+")
+
+figure4 <- data.frame(f4_1, f4_2, f4_3, f4_4) %>%
+  gt() %>%
+  cols_label("f4_1" = " ", "f4_2" = " ", "f4_3" = " ", "f4_4" = " ") %>%
+  tab_spanner(
+    label = "You", 
+    columns = vars(
+      f4_1, f4_2)
+    ) %>%
+  tab_spanner(
+    label = "Partner", 
+    columns = vars(
+      f4_3, f4_4
+    )
+  )
+```
+
+\begin{center}
+
+\textbf{Figure 4. Payoff Illustration in Prisoner's Dilemma}
+
+\end{center}
+
+```{r Figure 4 Output, fig.align="center"}
+
+# Printing
+
+figure4
+```
+
+\pagebreak
+
+```{r Figure 5}
+
+# Just shifting the data I  want to use later by making certain
+# columns integers, specifically the affected 
+# and prisoner dilemma columns. Oh and the affected
+# - 1 bit is to shift the binary from 1 and 0s to
+# 0 and -1s. 
+
+data$affected <- as.integer(data$affected)
+data$affected <- data$affected - 1
+data$pd_in <- as.integer(data$pd_in)
+data$pd_out <- as.integer(data$pd_out)
+
+
+# Just want to grab the data for Uzbeks
+# as opposed to including the data for Kyrgyz 
+# respondents. 
+
+data_uzbek <- data[which(data$ethnicity=="Uzbek"),]
+
+
+data_uzbek$pd_in_scale <- scale(data_uzbek$pd_in)
+data_uzbek$dg_in_scale <- scale(data_uzbek$dg_in)
+data_uzbek$pd_out_scale <- scale(data_uzbek$pd_out)
+data_uzbek$dg_out_scale <- scale(data_uzbek$dg_out)
+data_uzbek$cooperation_index <- rowSums(cbind(data_uzbek$pd_in_scale, 
+                                              data_uzbek$dg_in_scale, 
+                                              data_uzbek$pd_out_scale, 
+                                              data_uzbek$dg_out_scale), na.rm=T)/4
+
+
+# Alright I totally understand what's happening here. 
+# They are just running an OLS regression on the variables
+# that they made and scaled in the last step and trying
+# to see the effect that the affected variable had on each
+# of them in turn. 
+
+model1 <- lm(pd_in_scale ~ affected, data=data_uzbek)
+model2 <- lm(dg_in_scale ~ affected, data=data_uzbek)
+model3 <- lm(pd_out_scale ~ affected, data=data_uzbek)
+model4 <- lm(dg_out_scale ~ affected, data=data_uzbek)
+model5 <- lm(cooperation_index ~ affected, data=data_uzbek)
+
+
+# This all makes sense too. After running the regressions 
+# the authors have 5 list type data, but they need to extract 
+# the information that they want. It's kinda weird but I see that 
+# using this code they are getting the Variable, Coefficient, 
+# standard error, and name of test for each model. Cool. 
+
+model1Frame <- data.frame(Variable = rownames(summary(model1)$coef),
+                          Coefficient = summary(model1)$coef[, 1],
+                          SE = summary(model1)$coef[, 2],
+                          modelName = "Prisoner's Dilemma ingroup")[2,]
+model2Frame <- data.frame(Variable = rownames(summary(model2)$coef),
+                          Coefficient = summary(model2)$coef[, 1],
+                          SE = summary(model2)$coef[, 2],
+                          modelName = "Dictator Game ingroup")[2,]
+model3Frame <- data.frame(Variable = rownames(summary(model3)$coef),
+                          Coefficient = summary(model3)$coef[, 1],
+                          SE = summary(model3)$coef[, 2],
+                          modelName = "Prisoner's Dilemma outgroup")[2,]
+model4Frame <- data.frame(Variable = rownames(summary(model4)$coef),
+                          Coefficient = summary(model4)$coef[, 1],
+                          SE = summary(model4)$coef[, 2],
+                          modelName = "Dictator Game outgroup")[2,]
+model5Frame <- data.frame(Variable = rownames(summary(model5)$coef),
+                          Coefficient = summary(model5)$coef[, 1],
+                          SE = summary(model5)$coef[, 2],
+                          modelName = "Index")[2,]
+
+# So now they want to put all those extracted models together
+# in one dataframe. Cool. Checks out. They're using rbind to do taht
+# giving them a numeric order, and then using factor to put them 
+# in the order that they want. Not really sure what levels() does, 
+# but it looks like it cleans up the variable names to make them 
+# easier to graph later. 
+
+
+allModelFrame <- data.frame(rbind(model1Frame, model2Frame, model3Frame, model4Frame, model5Frame))
+allModelFrame$Variable <- c(1,2,3,4, 5)
+allModelFrame$Variable <- factor(allModelFrame$Variable, 
+                                 labels=c("Prisoner's Dilemma  Ingroup", "Dictator Game  Ingroup", 
+                                          "Prisoner's Dilemma  Outgroup", "Dictator Game  Outgroup", 
+                                          "Prosociality  Index"))
+levels(allModelFrame$Variable) <- gsub("  ", "\n", levels(allModelFrame$Variable))
+
+# Okay so they want to set confidence intervals 
+# at 90% and 95%. Seems clear. 
+
+interval1 <- -qnorm((1-0.90)/2)  # 90% multiplier
+interval2 <- -qnorm((1-0.95)/2)  # 95% multiplier
+
+# They want all colors to be 00000, which is probably black right? 
+
+myColors <- c("#000000", "#000000", "#000000", "#000000", "#000000")
+
+# I understand ggplot so this is cool. A bunch of detail stuff such
+# as adding a vertical dotted line at 0.00 mark. Then they make a 
+# horizontal linerange for every variable with thier ranges being
+# the SE * the confidence intervals calculated before. Then the points
+# show the mean effect which is the SE times the 95% CI with some cool
+# shapes added in for coolness. Switching up the y axis labels, setting
+# the theme, setting the colors, getting rid of the ticks, and generally
+# making things pretty. 
+
+figure5 <- ggplot(allModelFrame, aes(colour = as.factor(Variable))) + 
+  geom_hline(yintercept = 0, colour = gray(1/2), lty = 2) + 
+  geom_linerange(aes(x = Variable, 
+                     ymin = Coefficient - SE*interval1,
+                     ymax = Coefficient + SE*interval1),
+                     lwd = 1, position = position_dodge(width = 1/2)) + 
+  geom_pointrange(aes(x = Variable, y = Coefficient, 
+                      ymin = Coefficient - SE*interval2,
+                      ymax = Coefficient + SE*interval2),
+                      lwd = 1/4, position = position_dodge(width = 1/2),
+                      shape = 21, fill = "WHITE") + 
+  coord_flip(ylim = c(-0.8,0.2)) + 
+  scale_y_continuous(labels = c("-0.75", "-0.50", "-0.25", "0.00", "0.2")) +
+  theme_bw() + 
+  theme(legend.position="none") + 
+  ylab("")  + xlab("") +     
+  scale_color_manual(values=myColors) +   
+  theme(text = element_text(size=11), 
+        plot.title = element_text(size = 10, face = "bold"), 
+        plot.subtitle = element_text(size = 11, face = "italic")) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+
+\begin{center}
+\textbf{Figure 5. Effect of Riot on Prosocial Behavior}
+
+```{r Figure 5 Output, fig.align="center"}
+
+# Printing the figure.
+
+figure5
+```
+
+\end{center}
+
+\pagebreak
+
+
+```{r Figure 6}
+
+# Here is the typical prep work the authors always do
+
+data$affected <- as.integer(data$affected)
+data$affected <- data$affected - 1
+data$pd_in <- as.integer(data$pd_in)
+data$pd_out <- as.integer(data$pd_out)
+
+
+# Also renaming
+
+data$distance <- data$apc_min_distance
+
+data$social_cap_retro <- data$leadership
+
+data_uzbek <- data[which(data$ethnicity=="Uzbek"),]
+
+# Scaling
+
+data_uzbek$pd_in_scale <- scale(data_uzbek$pd_in)
+data_uzbek$dg_in_scale <- scale(data_uzbek$dg_in)
+data_uzbek$pd_out_scale <- scale(data_uzbek$pd_out)
+data_uzbek$dg_out_scale <- scale(data_uzbek$dg_out)
+data_uzbek$cooperation_index <- rowSums(cbind(data_uzbek$pd_in_scale, 
+                                              data_uzbek$dg_in_scale, 
+                                              data_uzbek$pd_out_scale, 
+                                              data_uzbek$dg_out_scale), na.rm=T)/4
+# More renaming
+
+data_uzbek$distance <- 1-data_uzbek$apc_min_distance
+dataAgg <- aggregate(data_uzbek[,c("affected", "distance")], 
+                     list(data_uzbek$id_psu),
+                     mean)
+
+# Now they are setting theirr two stages for the IV test
+
+first_stage_ind <- lm(affected ~ distance, data=data_uzbek)
+first_stage_psu <- lm(affected ~ distance, data=dataAgg)
+
+# First rounds of regressions with ivreg and lm
+
+model11 <- lm(pd_in_scale ~ distance , data=data_uzbek)
+model12 <- ivreg(pd_in_scale ~ affected | distance, data = data_uzbek)
+model21 <- lm(dg_in_scale ~ distance , data=data_uzbek)
+model22 <- ivreg(dg_in_scale ~ affected | distance , data = data_uzbek)
+model31 <- lm(pd_out_scale ~ distance , data=data_uzbek)
+model32 <- ivreg(pd_out_scale ~ affected  | distance , data = data_uzbek)
+model41 <- lm(dg_out_scale ~ distance , data=data_uzbek)
+model42 <- ivreg(dg_out_scale ~ affected  | distance , data = data_uzbek)
+model51 <- lm(cooperation_index ~ distance , data=data_uzbek)
+model52 <- ivreg(cooperation_index ~ affected  | distance , data = data_uzbek)
+
+
+# Agreggating
+
+dataAgg <- aggregate(data_uzbek[,c("apc_min_distance", "distance", "pd_in_scale", "dg_in_scale", 
+                                   "pd_out_scale", "dg_out_scale", "cooperation_index", "affected", 
+                                   "economy_index", "state_index", "social_cap_retro")], 
+                     list(data_uzbek$id_psu),
+                     mean)
+# Even more Renaming
+
+names(dataAgg)[1] <- "psu"
+
+
+# Dropping NAs
+
+dataAgg <- dataAgg[!is.na(dataAgg$social_cap_retro),] 
+
+# Normal regressions
+
+
+model1 <- lm(pd_in_scale ~ distance , data=dataAgg)
+model2 <- lm(dg_in_scale ~ distance , data=dataAgg)
+model3 <- lm(pd_out_scale ~ distance , data=dataAgg)
+model4 <- lm(dg_out_scale ~ distance , data=dataAgg)
+model5 <- lm(cooperation_index ~ distance , data=dataAgg)
+
+# Making the model frames for the graph later.
+
+model11Frame <- data.frame(Variable = rownames(summary(model11)$coef),
+                           Coefficient = summary(model11)$coef[, 1],
+                           SE = summary(model11)$coef[, 2],
+                           modelName = "PD ingroup")[2,]
+model21Frame <- data.frame(Variable = rownames(summary(model21)$coef),
+                           Coefficient = summary(model21)$coef[, 1],
+                           SE = summary(model21)$coef[, 2],
+                           modelName = "DG ingroup")[2,]
+model31Frame <- data.frame(Variable = rownames(summary(model31)$coef),
+                           Coefficient = summary(model31)$coef[, 1],
+                           SE = summary(model31)$coef[, 2],
+                           modelName = "PD outgroup")[2,]
+model41Frame <- data.frame(Variable = rownames(summary(model41)$coef),
+                           Coefficient = summary(model41)$coef[, 1],
+                           SE = summary(model41)$coef[, 2],
+                           modelName = "DG outgroup")[2,]
+model51Frame <- data.frame(Variable = rownames(summary(model51)$coef),
+                           Coefficient = summary(model51)$coef[, 1],
+                           SE = summary(model51)$coef[, 2],
+                           modelName = "Index")[2,]
+model12Frame <- data.frame(Variable = rownames(summary(model12)$coef),
+                           Coefficient = summary(model12)$coef[, 1],
+                           SE = summary(model12)$coef[, 2],
+                           modelName = "PD ingroup")[2,]
+model22Frame <- data.frame(Variable = rownames(summary(model22)$coef),
+                           Coefficient = summary(model22)$coef[, 1],
+                           SE = summary(model22)$coef[, 2],
+                           modelName = "DG ingroup")[2,]
+model32Frame <- data.frame(Variable = rownames(summary(model32)$coef),
+                           Coefficient = summary(model32)$coef[, 1],
+                           SE = summary(model32)$coef[, 2],
+                           modelName = "PD outgroup")[2,]
+model42Frame <- data.frame(Variable = rownames(summary(model42)$coef),
+                           Coefficient = summary(model42)$coef[, 1],
+                           SE = summary(model42)$coef[, 2],
+                           modelName = "DG outgroup")[2,]
+model52Frame <- data.frame(Variable = rownames(summary(model52)$coef),
+                           Coefficient = summary(model52)$coef[, 1],
+                           SE = summary(model52)$coef[, 2],
+                           modelName = "Index")[2,]
+
+# So they wanted to bring all models done for
+# the original data. And then arrange the order
+# using factor. 
+
+allModelFrame1 <- data.frame(rbind(model11Frame, model21Frame, model31Frame, model41Frame, model51Frame))
+allModelFrame1$Variable <- c(1,2,3,4,5)
+allModelFrame1$Variable <- factor(allModelFrame1$Variable, labels=c("Prisoner's Dilemma  Ingroup", "Dictator Game  Ingroup", "Prisoner's Dilemma  Outgroup", "Dictator Game  Outgroup", "Prosociality-  index"))
+levels(allModelFrame1$Variable) <- gsub("  ", "\n", levels(allModelFrame1$Variable))
+
+
+# So now they want to combine all the models that have the spatial 
+# component to them. 
+
+allModelFrame2 <- data.frame(rbind(model12Frame, model22Frame, model32Frame, model42Frame, model52Frame))
+allModelFrame2$Variable <- c(1,2,3,4,5)
+allModelFrame2$Variable <- factor(allModelFrame2$Variable, labels=c("Prisoner's Dilemma  Ingroup", "Dictator Game  Ingroup", "Prisoner's Dilemma  Outgroup", "Dictator Game  Outgroup", "Prosociality-  index"))
+levels(allModelFrame2$Variable) <- gsub("  ", "\n", levels(allModelFrame2$Variable))
+
+
+# allModelFram <- rbind(allModelFrame1, allModelFrame2, allModelFrame3)
+# allModelFram$matrix_style <- rep(c("Instrument", "2SLS", "Instrument (SAM)"),each=5)
+
+
+allModelFram <- rbind(allModelFrame1, allModelFrame2)
+allModelFram$test <- rep(c("Instrument", "Instrument", "Instrument", "Instrument", "Instrument", "2SLS", "2SLS", "2SLS", "2SLS", "2SLS"))
+
+
+interval1 <- -qnorm((1-0.90)/2)  # 90% multiplier
+interval2 <- -qnorm((1-0.95)/2)  # 95% multiplier
+
+
+# They set up their dodge position for the graph.
+
+pd = position_dodge(0.5)
+
+
+# Typical ggplot code.
+
+figure6 <- ggplot(allModelFram, aes(shape=test)) + 
+  geom_hline(yintercept = 0, colour = gray(1/2), lty = 2) + 
+  geom_linerange(aes(x = Variable, ymin = Coefficient - SE*interval1,
+                     ymax = Coefficient + SE*interval1),
+                 lwd = 1, position = pd) + 
+  geom_linerange(aes(x = Variable, ymin = Coefficient - SE*interval2,
+                     ymax = Coefficient + SE*interval2),
+                 lwd = 1/4, position = pd) + 
+  geom_point(aes(x = Variable, y = Coefficient, shape = test),
+             position = pd,fill = "WHITE", size = 3) + 
+  coord_flip(ylim = c(-0.95,0.22)) + theme_bw() + 
+  theme(legend.position="bottom") + 
+  scale_shape_manual(values = c(23, 24, 25), name ="") +
+  ylab("")  + xlab("") +     
+  theme(text = element_text(size=18))
+```
+
+\begin{center}
+\textbf{Figure 6.  Effect of Riot Destruction on Prosocial Behavior (IV)}
+
+```{r Figure 6 Output, fig.align='center'}
+
+# Printing
+
+figure6
+```
+
+\end{center}
+
+\pagebreak
+
+```{r Figure 8, cache=TRUE, include=FALSE}
+
+# Like I said before the scaling code doesn't change
+# in between the figures so I won't comment on it 
+# much anymore. This is just thier scaling and making
+# the cooperation index var.
+
+data_uzbek <- data[which(data$ethnicity=="Uzbek"),]
+data_uzbek$pd_in_scale <- scale(data_uzbek$pd_in)
+data_uzbek$dg_in_scale <- scale(data_uzbek$dg_in)
+data_uzbek$pd_out_scale <- scale(data_uzbek$pd_out)
+data_uzbek$dg_out_scale <- scale(data_uzbek$dg_out)
+data_uzbek$cooperation_index <- rowSums(cbind(data_uzbek$pd_in_scale, data_uzbek$dg_in_scale, data_uzbek$pd_out_scale, data_uzbek$dg_out_scale), na.rm=T)/4
+data_uzbek$distance <- data_uzbek$apc_min_distance
+
+
+# So the first lin eis a typical regression. The third
+# is also a typical regression but for the instrument i.e.
+# distance to apc vehicle. The second is an instrumental 
+# variable regression. I understand what it is by reading
+# the notes on it, but I'll need more time to get
+# what it is doing here. 
+
+ols <- lm(cooperation_index ~ affected, data = data_uzbek)
+iv <- ivreg(cooperation_index ~ affected | distance , data = data_uzbek)
+instrument <- lm(cooperation_index ~ distance , data = data_uzbek)
+
+# So here the authors wanted to randomize APC locations to 
+# test the affect they have on figure 6. I get that. So they load in 
+# the distance data they chose for that. Their note says 
+# "Insheet distances from any given PSU to 9500 randomly chosen APC locations"
+
+DistMat <- as.data.frame(read.csv("Data/distances_ri.csv", header = TRUE, sep =","))[-1]
+
+# So every column in DistMat has an X in it. Here they really just want
+# to get rid of those. 
+
+colnames(DistMat) <- c(na.omit(as.numeric(unlist(strsplit(as.matrix(colnames(DistMat)), "X"))))) 
+
+# Now they want to obtain PSU names from 
+# the survey data as character to match to DistMat
+
+psus <- c(as.character(unique(data_uzbek$id_psu)))
+
+# Here they want to reduce distance matrix to 
+# entries for PSUs where they sampled Uzbek respondents
+
+sample_psus <- names(DistMat)[(names(DistMat) %in% psus)]
+DistMat <- DistMat[, sample_psus]
+
+# So the authors also had data about whether these apc locations
+# were east of the Akbuura river or not. This is them loading it in 
+# and then adding it to their other data. 
+
+eoa <- as.data.frame(read.csv("Data/ri_east_of_akbuura.csv", header = TRUE))[2]
+DistMat$eoa <-eoa
+
+# Now they want to create matrices of whether the locations were
+# east or west of the Akbuura river. Then they wanted to 
+# make them into separate dataframes. 
+
+DistMat_east <- subset(DistMat, eoa==1)
+DistMat_west <- subset(DistMat, eoa==0)
+DistMat = subset(DistMat, select = -c(eoa) )
+DistMat_west = subset(DistMat_west, select = -c(eoa) )
+DistMat_east = subset(DistMat_east, select = -c(eoa) )
+
+# Setting the seed for some randomization but also
+# they wanted to fill up the vectors so that they both have legnths of 
+# 5000 apparently. 
+
+set.seed(1000)
+DistMat_east <- rbind(DistMat_east, DistMat_east[sample(169), ])
+set.seed(1000)
+DistMat_west <- rbind(DistMat_west, DistMat_west[sample(331),])
+
+# I get this step now. They want to shuffle thier
+# data sets from before. 
+
+set.seed(1000)
+DistMat_east <- DistMat_east[sample(nrow(DistMat_east)),]
+set.seed(1000)
+DistMat_west <- DistMat_west[sample(nrow(DistMat_west)),]
+
+# They are creating a randome samling with replacment data frame. 
+
+n <- 10000
+set.seed(1000)
+rand_vals <- sample(c(1:5000), n, replace = TRUE)
+
+# They want to "store coefficient in vector
+# with elements equal to draws" according to thier
+# code comments. I follow that. 
+
+estim <- matrix(0, nrow=n, ncol=1)
+
+# Okay so this is tricky right, but they are using foor
+# loop to loop through all values. 
+
+j <- 0
+for (i in rand_vals){
+  j <- j + 1
+  
+   
+# Then they are taking a distance from both east and west, transposing,
+# finding minimum distance and then adding a column for matching. 
+  
+  dist_i_west <- as.data.frame(t(DistMat_west[i,]))
+  dist_i_east <- as.data.frame(t(DistMat_east[i,]))
+  dist_i <- cbind(dist_i_west, dist_i_east)
+
+# Then they choose the APC location in east or west that is closest to thier
+# interview location, according to thier notes. 
+  
+  dist_i <- as.data.frame(apply(dist_i, 1, FUN=min))
+  dist_i <- setDT(dist_i, keep.rownames = TRUE)
+  colnames(dist_i)=c("id_psu", "drivedist")
+  
+# Then they merge the data. 
+  
+  combinedData <- join(data_uzbek, dist_i, by='id_psu', type='left', match='all')
+  
+# Then they run a regression on the coperation index and 
+# the new locations. 
+  
+  ivest_i <- lm(cooperation_index ~ drivedist, data=combinedData)  
+  
+# Then they save the results somehow and merge them 
+# to the coef matrix they made earlier. 
+  
+  estim[j,1] <- estim[j,1] + coef(ivest_i)[2] 
+}
+
+# Okay I'm back to understanding things. So here they are shifting their
+# dat to negative again. Making it a data frame and finding the mean. 
+
+estim <- estim*-1  #convert to negative scale "closeness to barracks"
+data_combined <- as.data.frame(estim)
+mean(estim)
+
+# Graphing code is graphic code. They make a density plot. 
+# Then they add in a bunch of details like a vertical line
+# and such. 
+
+figure8 <- ggplot(data_combined, aes(x=V1)) +  
+  geom_density(bw = 0.02) +
+  theme_bw() + 
+  ylab("Density")  + xlab("Estimate") +     
+  theme(text = element_text(size=11)) +
+  scale_x_continuous(limits = c(-0.2,0.2)) + 
+  geom_vline(xintercept=instrument$coefficients[2]*-1, linetype=2, color = "grey") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+```
+
+
+\begin{center}
+\textbf{Figure 8. Randomization Inference}
+
+```{r Figure 8 Output, fig.align="center"}
+
+# Time to make the actual graph. 
+
+figure8
+```
+
+\end{center}
+
+\pagebreak
+
+
+```{r Figure 9}
+
+# They're just making affected an 
+# integer again and then shifting the
+# binary state to negative 1 and 0.
+
+data$affected <- as.integer(data$affected)
+data$affected <- data$affected - 1
+
+# Now they subset the data. 
+
+data_uzbek <- data[which(data$ethnicity=="Uzbek"),]
+
+# This bit of the paper is an exploration of whether
+# the people who were affected by the riots actually
+# had more damages than other types. So they run the 
+# OLS regressions on each type of loss. 
+
+model1 <- lm(losses_1 ~ affected, data=data_uzbek)
+model2 <- lm(losses_2 ~ affected, data=data_uzbek)
+model3 <- lm(losses_3 ~ affected, data=data_uzbek)
+model4 <- lm(losses_4 ~ affected, data=data_uzbek)
+model5 <- lm(losses_5 ~ affected, data=data_uzbek)
+
+
+# Here they just want to grab their coefficients from 
+# the regressions they ran earlier. 
+
+model1Frame <- data.frame(Variable = rownames(summary(model1)$coef),
+                          Coefficient = summary(model1)$coef[, 1],
+                          SE = summary(model1)$coef[, 2],
+                          modelName = "Car")[2,]
+model2Frame <- data.frame(Variable = rownames(summary(model2)$coef),
+                          Coefficient = summary(model2)$coef[, 1],
+                          SE = summary(model2)$coef[, 2],
+                          modelName = "TV")[2,]
+model3Frame <- data.frame(Variable = rownames(summary(model3)$coef),
+                          Coefficient = summary(model3)$coef[, 1],
+                          SE = summary(model3)$coef[, 2],
+                          modelName = "House")[2,]
+model4Frame <- data.frame(Variable = rownames(summary(model4)$coef),
+                          Coefficient = summary(model4)$coef[, 1],
+                          SE = summary(model4)$coef[, 2],
+                          modelName = "Money")[2,]
+model5Frame <- data.frame(Variable = rownames(summary(model5)$coef),
+                          Coefficient = summary(model5)$coef[, 1],
+                          SE = summary(model5)$coef[, 2],
+                          modelName = "Business")[2,]
+
+# Here they once again want to combine all thier data into one. 
+# They also want to list them in a particular order. 
+
+allModelFrame <- data.frame(rbind(model1Frame, model2Frame, model3Frame, model4Frame, model5Frame))
+allModelFrame$Variable <- c(1,2,3,4, 5)
+allModelFrame$Variable <- factor(allModelFrame$Variable, labels=c("Car", "TV", "House", "Money", "Business"))
+levels(allModelFrame$Variable) <- gsub("  ", "\n", levels(allModelFrame$Variable))
+
+# Now they want to calculat the 90 and 95 CIs. 
+
+interval1 <- -qnorm((1-0.90)/2)  # 90% multiplier
+interval2 <- -qnorm((1-0.95)/2)  # 95% multiplier
+
+# And then its another round of color setting. 
+
+myColors <- c("#000000", "#000000", "#000000", "#000000", "#000000")
+
+
+# Same graphing code from Figure 5 and 6. Refer to my comments
+# on Figure 5 for a more detailed analysis of what's happening. 
+
+figure9 <- ggplot(allModelFrame, aes(colour = as.factor(Variable))) + 
+  geom_hline(yintercept = 0, colour = gray(1/2), lty = 2) + 
+  geom_linerange(aes(x = Variable, ymin = Coefficient - SE*interval1,
+                     ymax = Coefficient + SE*interval1),
+                 lwd = 1, position = position_dodge(width = 1/2)) + 
+  geom_pointrange(aes(x = Variable, y = Coefficient, ymin = Coefficient - SE*interval2,
+                      ymax = Coefficient + SE*interval2),
+                  lwd = 1/4, position = position_dodge(width = 1/2),
+                  shape = 21, fill = "WHITE") + 
+  coord_flip(ylim = c(-0.1,0.3)) + theme_bw() + 
+  theme(legend.position="none") + 
+  #ggtitle("Cooperation among Uzbeks") +  
+  ylab("")  + xlab("") +     
+  scale_color_manual(values=myColors) +   
+  theme(text = element_text(size=11)) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+\begin{center}
+\textbf{Figure 9. Effect of Riot Destruction on Losses}
+
+```{r Figure 9 Output, fig.align='center'}
+
+# output
+
+figure9
+```
+
+\end{center}
+
+\pagebreak
+
+
+```{r Table 1, include=FALSE}
+
+# Same cleaning code that they've done
+# for all figures. Its just as.integer commands
+# and shifting the binary.
+
+data$affected <- as.integer(data$affected)
+data$affected <- data$affected - 1
+data$pd_in <- as.integer(data$pd_in)
+data$pd_out <- as.integer(data$pd_out)
+
+
+# They wanted to rename a variable here. 
+
+data$social_cap_retro <- data$leadership
+
+# Subsetting time as per usual.
+
+data_uzbek <- data[which(data$ethnicity=="Uzbek"),]
+
+# And once more they wanted to scale everything. 
+# Remind me to ask Alice to clarify what this does 
+# in simple terms. I think I get it but I want to 
+# make sure. 
+
+data_uzbek$pd_in_scale <- scale(data_uzbek$pd_in)
+data_uzbek$dg_in_scale <- scale(data_uzbek$dg_in)
+data_uzbek$pd_out_scale <- scale(data_uzbek$pd_out)
+data_uzbek$dg_out_scale <- scale(data_uzbek$dg_out)
+data_uzbek$cooperation_index <- rowSums(cbind(data_uzbek$pd_in_scale, 
+                                              data_uzbek$dg_in_scale, 
+                                              data_uzbek$pd_out_scale, 
+                                              data_uzbek$dg_out_scale), na.rm=T)/4
+
+# So many multivariate linear regressions. So this 
+# is their table info which requires the prisoner dilemma, 
+# dictator game, and cooperation index to be regressed by 
+# a bushel of variables. Here is where I'd like to do some
+# playing around when its my turn to make changes. 
+
+model1 <- lm(pd_in_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_uzbek)
+model2 <- lm(dg_in_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_uzbek)
+model3 <- lm(pd_out_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_uzbek)
+model4 <- lm(dg_out_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_uzbek)
+model5 <- lm(cooperation_index ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_uzbek)
+
+# I actually don't know why they are
+# running a summary on every model but
+# I assume they need to in order to run
+# the stargazer. 
+
+summary(model1)
+summary(model2)
+summary(model3)
+summary(model4)
+summary(model5)
+```
+
+\begin{center}
+\textbf{Table 1}
+\end{center}
+
+```{r Table 1 Stargazer, results = "asis"}
+
+# Alright so this is weird. I know they are using stargazer 
+# to make the really nice looking table in the paper. I don't know
+# how this code works though. I can't seem to replicate it myself.
+# This is something else I'll need Alice's help with. Or I just need 
+# enough time to figure out how stargazer works. 
+
+cat("\\scalebox{.55}{")
+
+stargazer(model1, model2, model3, model4, model5,
+          covariate.labels = c("Destruction", "Wealth index", "State capacity index", "Community policing index", "Accessibility index", "AJ %"),
+          dep.var.labels = c("Cooperation in Prisoner's Dilemma", "Investment in Dictator Game", "Cooperation in Prisoner's Dilemma", "Investment in Dictator Game" , "Cooperation-Index"),
+          star.char = c("*", "**", "***"),
+          title = "Table 1: Effect of Destruction on Prosocial Behavior (controlling for confounders and mobilization)",
+          star.cutoffs = c(0.05, 0.01, 0.001), type = 'latex', float = FALSE)
+
+
+cat("}") 
+```
+

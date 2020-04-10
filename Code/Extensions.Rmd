@@ -1,0 +1,466 @@
+---
+title: "Extensions"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(bookdown)
+library(stargazer)
+library(tidyverse)
+library(AER)
+library(ggplot2)
+library(readstata13)
+library(spdep) 
+library(tseries)
+library(spatialreg)
+```
+
+```{r Loading}
+
+# My loading code. 
+
+load("~/Replication_Project/Data/kyrgyzstan.RData")
+data <- table
+
+# Shifting the victimization dummy to integer and switching 
+# into a better binary. 
+
+data$affected <- as.integer(data$affected)
+data$affected <- data$affected - 1
+data$pd_in <- as.integer(data$pd_in)
+data$pd_out <- as.integer(data$pd_out)
+
+```
+
+```{r Uzbek Table Confounder Extension}
+
+# Here I'm just creating my uzbek subset of the data. 
+# The authors used base R so I decided to follow it too. 
+
+data_uzbek <- data[which(data$ethnicity=="Uzbek"),]
+
+# Here I'm just scaling my variables and creating the cooperation
+# index that is used throughout the paper. 
+
+data_uzbek$pd_in_scale <- scale(data_uzbek$pd_in)
+data_uzbek$dg_in_scale <- scale(data_uzbek$dg_in)
+data_uzbek$pd_out_scale <- scale(data_uzbek$pd_out)
+data_uzbek$dg_out_scale <- scale(data_uzbek$dg_out)
+data_uzbek$cooperation_index <- rowSums(cbind(data_uzbek$pd_in_scale, 
+                                              data_uzbek$dg_in_scale, 
+                                              data_uzbek$pd_out_scale, 
+                                              data_uzbek$dg_out_scale), na.rm=T)/4
+
+# Now I'm separating the common employer variable because I thought 
+# it would be more interesting to separate it into each ethnicity.
+
+y <- data_uzbek %>%
+  mutate(comm_employer = case_when(comm_employer == 1 ~ "Kyrgyz",
+                                   comm_employer == 4 ~ "Other", 
+                                   comm_employer == -1 ~ "Unemployed",
+                                   comm_employer == 2 ~ "Uzbek", 
+                                   comm_employer == 3 ~ "Russian"))
+
+# Just placing them in the order I'd like.
+
+y$comm_employer <- factor(y$comm_employer, levels = c("Kyrgyz", "Uzbek", "Russian", "Unemployed", "Other"))
+
+# First OLS linear regressions for the confounders I wanted to explore. 
+
+model1_Uzbek <- lm(pd_in_scale ~ affected + comm_lang_use  + education +  comm_employer, data=y)
+model2_Uzbek <- lm(dg_in_scale ~ affected + comm_lang_use + education + comm_employer, data=y)
+model3_Uzbek <- lm(pd_out_scale ~ affected + comm_lang_use +  education +  comm_employer, data=y)
+model4_Uzbek <- lm(dg_out_scale ~ affected + comm_lang_use + education +  comm_employer, data=y)
+model5_Uzbek <- lm(cooperation_index ~ affected + comm_lang_use + education + comm_employer, data=y)
+```
+
+
+\begin{center}
+\textbf{Table 1: Uzbek Confounders}
+
+```{r Table 1, results = "asis"}
+
+# The table is way too wide without using scalebox here. 
+
+cat("\\scalebox{.59}{")
+
+# First table, but I made some changes to labels, font size, etc. 
+
+
+stargazer(model1_Uzbek, model2_Uzbek, model3_Uzbek, model4_Uzbek, model5_Uzbek,
+          covariate.labels = c("Destruction", "Common Language Usage", "Education", "Kyrgyz Employer", "Uzbek Employer", "Russian Employer", "Unemployed", "Constant"),
+          dep.var.labels = c("Prisoner's Dilemma (In-Group)", "Dictator Game (In-Group)", "Prisoner's Dilemma (Out-Group)", "Dictator Game (Out-Group)" , "Cooperation-Index"),
+          star.char = c("*", "**", "***"),
+          star.cutoffs = c(0.05, 0.01, 0.001),
+          single.row = TRUE, 
+          font.size = NULL,
+          column.sep.width = "1pt",
+          header = FALSE, type = 'latex', float = FALSE)
+
+# End of the scalebox
+
+cat("}") 
+```
+
+\end{center}
+
+\hfill\break
+\hfill\break
+
+
+
+\pagebreak
+
+```{r Table 2}
+
+# Now I wanted to isolate for just common language usage but also to check the interaction effect
+# between it and the victimization dummy. 
+
+model6_Uzbek <- lm(pd_in_scale ~ affected + comm_lang_use + affected * comm_lang_use, data=data_uzbek)
+model7_Uzbek <- lm(dg_in_scale ~ affected + comm_lang_use + affected * comm_lang_use, data=data_uzbek)
+model8_Uzbek <- lm(pd_out_scale ~ affected + comm_lang_use + affected * comm_lang_use, data=data_uzbek)
+model9_Uzbek <- lm(dg_out_scale ~ affected + comm_lang_use + affected * comm_lang_use, data=data_uzbek)
+model10_Uzbek <- lm(cooperation_index ~ affected + comm_lang_use + affected * comm_lang_use, data=data_uzbek)
+```
+
+
+\begin{center}
+\textbf{Table 2: Uzbek Victimization and Common Language Usage Interaction}
+
+```{r Table 2 Stargazer, results = "asis"}
+
+# Same deal as before with scalebox. 
+
+cat("\\scalebox{.59}{")
+
+# Essentially the same code here as well for Table 2.
+
+stargazer(model6_Uzbek, model7_Uzbek, model8_Uzbek, model9_Uzbek, model10_Uzbek,
+          covariate.labels = c("Destruction", "Common Language Usage", "Interaction", "Constant"),
+          dep.var.labels = c("Prisoner's Dilemma (In-Group)", "Dictator Game (In-Group)", "Prisoner's Dilemma (Out-Group)", "Dictator Game (Out-Group)" , "Cooperation-Index"),
+          star.char = c("*", "**", "***"),
+          star.cutoffs = c(0.05, 0.01, 0.001),
+          single.row = TRUE, 
+          font.size = NULL,
+          column.sep.width = "1pt",
+          header = FALSE, type = 'latex', float = FALSE)
+
+# End scalebox.
+
+cat("}") 
+```
+
+
+\end{center}
+
+\hfill\break
+\hfill\break
+
+
+\pagebreak
+
+
+```{r Starting Kyrgyz Data Tweaks}
+
+# This is for the later regression table 
+
+data$social_cap_retro <- data$leadership
+
+# Now I'm just making a new subset of the data but for the Kyrgyz sample.
+# I tried to keep the code the same as it was for the Uzbek sample.
+# Same scaling and same cooperation index too. 
+
+data_kyrgyz <- data[which(data$ethnicity=="Kyrgyz"),]
+
+data_kyrgyz$pd_in_scale <- scale(data_kyrgyz$pd_in)
+data_kyrgyz$dg_in_scale <- scale(data_kyrgyz$dg_in)
+data_kyrgyz$pd_out_scale <- scale(data_kyrgyz$pd_out)
+data_kyrgyz$dg_out_scale <- scale(data_kyrgyz$dg_out)
+data_kyrgyz$cooperation_index <- rowSums(cbind(data_kyrgyz$pd_in_scale, 
+                                              data_kyrgyz$dg_in_scale, 
+                                              data_kyrgyz$pd_out_scale, 
+                                              data_kyrgyz$dg_out_scale), na.rm=T)/4
+
+
+```
+
+```{r Figure 5 Kyrgyz Data}
+
+# New basic OLS regressions but for the Kyrgyz.  
+
+model1_Kyrgyz <- lm(pd_in_scale ~ affected, data=data_kyrgyz)
+model2_Kyrgyz <- lm(dg_in_scale ~ affected, data=data_kyrgyz)
+model3_Kyrgyz <- lm(pd_out_scale ~ affected, data=data_kyrgyz)
+model4_Kyrgyz <- lm(dg_out_scale ~ affected, data=data_kyrgyz)
+model5_Kyrgyz <- lm(cooperation_index ~ affected, data=data_kyrgyz)
+
+
+# Now I'm using those regressions to create larger model frames that 
+# have the information I need in a data frame. This will help for the graph
+# later. 
+
+model1Frame <- data.frame(Variable = rownames(summary(model1_Kyrgyz)$coef),
+                          Coefficient = summary(model1_Kyrgyz)$coef[, 1],
+                          SE = summary(model1_Kyrgyz)$coef[, 2],
+                          modelName = "Prisoner's Dilemma ingroup")[2,]
+model2Frame <- data.frame(Variable = rownames(summary(model2_Kyrgyz)$coef),
+                          Coefficient = summary(model2_Kyrgyz)$coef[, 1],
+                          SE = summary(model2_Kyrgyz)$coef[, 2],
+                          modelName = "Dictator Game ingroup")[2,]
+model3Frame <- data.frame(Variable = rownames(summary(model3_Kyrgyz)$coef),
+                          Coefficient = summary(model3_Kyrgyz)$coef[, 1],
+                          SE = summary(model3_Kyrgyz)$coef[, 2],
+                          modelName = "Prisoner's Dilemma outgroup")[2,]
+model4Frame <- data.frame(Variable = rownames(summary(model4_Kyrgyz)$coef),
+                          Coefficient = summary(model4_Kyrgyz)$coef[, 1],
+                          SE = summary(model4_Kyrgyz)$coef[, 2],
+                          modelName = "Dictator Game outgroup")[2,]
+model5Frame <- data.frame(Variable = rownames(summary(model5_Kyrgyz)$coef),
+                          Coefficient = summary(model5_Kyrgyz)$coef[, 1],
+                          SE = summary(model5_Kyrgyz)$coef[, 2],
+                          modelName = "Index")[2,]
+
+# Time to add them together, put them in the order I want, and rename them. 
+
+
+allModelFrame <- data.frame(rbind(model1Frame, model2Frame, model3Frame, model4Frame, model5Frame))
+allModelFrame$Variable <- c(1,2,3,4, 5)
+allModelFrame$Variable <- factor(allModelFrame$Variable, 
+                                 labels=c("Prisoner's Dilemma  Ingroup", "Dictator Game  Ingroup", 
+                                          "Prisoner's Dilemma  Outgroup", "Dictator Game  Outgroup", 
+                                          "Prosociality  Index"))
+
+levels(allModelFrame$Variable) <- gsub("  ", "\n", levels(allModelFrame$Variable))
+
+# I want to set confidence intervals 
+# at 90% and 95%.. 
+
+interval1 <- -qnorm((1-0.90)/2)  # 90% multiplier
+interval2 <- -qnorm((1-0.95)/2)  # 95% multiplier
+
+# And setting the colors. 
+
+myColors <- c("#000000", "#000000", "#000000", "#000000", "#000000")
+
+# This is mostly the original author's code, but its very straight 
+# forward ggplot code that just adds in all the details I need. 
+
+figure1 <- ggplot(allModelFrame, aes(colour = as.factor(Variable))) + 
+  geom_hline(yintercept = 0, colour = gray(1/2), lty = 2) + 
+  geom_linerange(aes(x = Variable, ymin = Coefficient - SE*interval1,
+                     ymax = Coefficient + SE*interval1),
+                 lwd = 1, position = position_dodge(width = 1/2)) + 
+  geom_pointrange(aes(x = Variable, y = Coefficient, ymin = Coefficient - SE*interval2,
+                      ymax = Coefficient + SE*interval2),
+                  lwd = 1/4, position = position_dodge(width = 1/2),
+                  shape = 21, fill = "WHITE") + 
+  coord_flip(ylim = c(-1,1)) + theme_bw() +
+  scale_y_continuous(breaks = c(-1, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1)) +
+  theme(legend.position="none") + 
+  ylab("")  + xlab("") +     
+  scale_color_manual(values=myColors) +   
+  theme(text = element_text(size=12)) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+\begin{center}
+\textbf{Model 1:  Kyrgyz Prosocial Behavior}
+
+```{r Figure 5 Kyrgyz Data Output, fig.align="center"}
+
+# Printing the first Kyrgyz figure. 
+
+figure1
+```
+
+\end{center}
+
+
+\pagebreak
+
+```{r Kyrgyz Table Extension, include=FALSE}
+
+# More OLS regressions but now to check for the original authors' confounders.  
+
+model6_Kyrgyz <- lm(pd_in_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_kyrgyz)
+model7_Kyrgyz <- lm(dg_in_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_kyrgyz)
+model8_Kyrgyz <- lm(pd_out_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_kyrgyz)
+model9_Kyrgyz <- lm(dg_out_scale ~ affected + economy_index + state_index + social_cap_retro + access_index + aj_vote_share, data=data_kyrgyz)
+model10_Kyrgyz <- lm(cooperation_index ~ affected + economy_index + state_index + 
+                     social_cap_retro + access_index + aj_vote_share, data=data_kyrgyz)
+```
+
+\begin{center}
+\textbf{Table 3: Kyrgyz Confounders}
+
+```{r Kyrgyz Table Extension Stargazer, results = "asis"}
+
+# Same deal as the two stargazer charts before. Same scalebox and same
+# detail code. 
+
+cat("\\scalebox{.59}{")
+
+stargazer(model6_Kyrgyz, model7_Kyrgyz, model8_Kyrgyz, model9_Kyrgyz, model10_Kyrgyz,
+          covariate.labels = c("Destruction", "Wealth index", "State capacity index", "Community policing index", "Accessibility index", "AJ %"),
+          dep.var.labels = c("Prisoner's Dilemma (In-Group)", "Dictator Game (In-Group)", "Prisoner's Dilemma (Out-Group)", "Dictator Game (Out-Group)" , "Cooperation-Index"),
+          star.char = c("*", "**", "***"),
+          star.cutoffs = c(0.05, 0.01, 0.001),
+          single.row = TRUE, 
+          font.size = NULL,
+          column.sep.width = "1pt",
+          header = FALSE, type = 'latex', float = FALSE)
+
+cat("}") 
+
+```
+
+\end{center}
+
+\hfill\break
+\hfill\break
+
+
+\pagebreak
+
+
+```{r Kyrygz Prosocial Instrument}
+
+# Creating a distance variable like the authors. 
+
+data$distance <- data$apc_min_distance
+
+# And now I'm setting up like they did too. 
+
+data_kyrgyz$distance <- 1-data_kyrgyz$apc_min_distance
+dataAgg <- aggregate(data_kyrgyz[,c("affected", "distance")], 
+                     list(data_kyrgyz$id_psu),
+                     mean)
+
+# Here are a new series of regressions separated into pairs of OLS and IV reg regressions. 
+# Each will test the instrument variable and then use an IV reg to do the victimization
+# dummy and the instrument. This is repeated for every index. 
+
+model11_Kyrgyz <- lm(pd_in_scale ~ distance , data=data_kyrgyz)
+model1_IV <- ivreg(pd_in_scale ~ affected | distance, data = data_kyrgyz)
+
+model12_Kyrgyz <- lm(dg_in_scale ~ distance , data=data_kyrgyz)
+model2_IV <- ivreg(dg_in_scale ~ affected | distance , data = data_kyrgyz)
+
+model13_Kyrgyz <- lm(pd_out_scale ~ distance , data=data_kyrgyz)
+model3_IV <- ivreg(pd_out_scale ~ affected  | distance , data = data_kyrgyz)
+
+model14_Kyrgyz <- lm(dg_out_scale ~ distance , data=data_kyrgyz)
+model4__IV <- ivreg(dg_out_scale ~ affected  | distance , data = data_kyrgyz)
+
+model15_Kyrgyz <- lm(cooperation_index ~ distance , data=data_kyrgyz)
+model5_IV <- ivreg(cooperation_index ~ affected  | distance , data = data_kyrgyz)
+
+
+# Same as before, I am grabbing all the necessary data from each model and putting
+# it in a data frame that I can use to graph later. 
+
+modelFrame_6 <- data.frame(Variable = rownames(summary(model11_Kyrgyz)$coef),
+                           Coefficient = summary(model11_Kyrgyz)$coef[, 1],
+                           SE = summary(model11_Kyrgyz)$coef[, 2],
+                           modelName = "PD ingroup")[2,]
+modelFrame_7 <- data.frame(Variable = rownames(summary(model12_Kyrgyz)$coef),
+                           Coefficient = summary(model12_Kyrgyz)$coef[, 1],
+                           SE = summary(model12_Kyrgyz)$coef[, 2],
+                           modelName = "DG ingroup")[2,]
+modelFrame_8 <- data.frame(Variable = rownames(summary(model13_Kyrgyz)$coef),
+                           Coefficient = summary(model13_Kyrgyz)$coef[, 1],
+                           SE = summary(model13_Kyrgyz)$coef[, 2],
+                           modelName = "PD outgroup")[2,]
+modelFrame_9 <- data.frame(Variable = rownames(summary(model14_Kyrgyz)$coef),
+                           Coefficient = summary(model14_Kyrgyz)$coef[, 1],
+                           SE = summary(model14_Kyrgyz)$coef[, 2],
+                           modelName = "DG outgroup")[2,]
+modelFrame_10 <- data.frame(Variable = rownames(summary(model15_Kyrgyz)$coef),
+                           Coefficient = summary(model15_Kyrgyz)$coef[, 1],
+                           SE = summary(model15_Kyrgyz)$coef[, 2],
+                           modelName = "Index")[2,]
+IV_modelFrame_1 <- data.frame(Variable = rownames(summary(model1_IV)$coef),
+                           Coefficient = summary(model1_IV)$coef[, 1],
+                           SE = summary(model1_IV)$coef[, 2],
+                           modelName = "PD ingroup")[2,]
+IV_modelFrame_2 <- data.frame(Variable = rownames(summary(model2_IV)$coef),
+                           Coefficient = summary(model2_IV)$coef[, 1],
+                           SE = summary(model2_IV)$coef[, 2],
+                           modelName = "DG ingroup")[2,]
+IV_modelFrame_3 <- data.frame(Variable = rownames(summary(model3_IV)$coef),
+                           Coefficient = summary(model3_IV)$coef[, 1],
+                           SE = summary(model3_IV)$coef[, 2],
+                           modelName = "PD outgroup")[2,]
+IV_modelFrame_4 <- data.frame(Variable = rownames(summary(model4__IV)$coef),
+                           Coefficient = summary(model4__IV)$coef[, 1],
+                           SE = summary(model4__IV)$coef[, 2],
+                           modelName = "DG outgroup")[2,]
+IV_modelFrame_5 <- data.frame(Variable = rownames(summary(model5_IV)$coef),
+                           Coefficient = summary(model5_IV)$coef[, 1],
+                           SE = summary(model5_IV)$coef[, 2],
+                           modelName = "Index")[2,]
+
+# Here I combine the OLS regression toggether, reorder them, and then give them better names. 
+
+allModelFrame2 <- data.frame(rbind(modelFrame_6, modelFrame_7, modelFrame_8, modelFrame_9, modelFrame_10))
+allModelFrame2$Variable <- c(1,2,3,4,5)
+allModelFrame2$Variable <- factor(allModelFrame2$Variable, labels=c("Prisoner's Dilemma  Ingroup", "Dictator Game  Ingroup", "Prisoner's Dilemma  Outgroup", "Dictator Game  Outgroup", "Prosociality-  index"))
+levels(allModelFrame2$Variable) <- gsub("  ", "\n", levels(allModelFrame2$Variable))
+
+# Same as above but now for the IV regs. 
+
+allModelFrame3 <- data.frame(rbind(IV_modelFrame_1,IV_modelFrame_2, IV_modelFrame_3, IV_modelFrame_4, IV_modelFrame_5))
+allModelFrame3$Variable <- c(1,2,3,4,5)
+allModelFrame3$Variable <- factor(allModelFrame3$Variable, labels=c("Prisoner's Dilemma  Ingroup", "Dictator Game  Ingroup", "Prisoner's Dilemma  Outgroup", "Dictator Game  Outgroup", "Prosociality-  index"))
+levels(allModelFrame3$Variable) <- gsub("  ", "\n", levels(allModelFrame3$Variable))
+
+# TIme to make a master grouping of all model frames. Also differing between the OLS and 2SLS regressions. 
+
+allModelFrame2 <- rbind(allModelFrame2, allModelFrame3)
+allModelFrame2$test <- rep(c("Instrument", "Instrument", "Instrument", "Instrument", "Instrument", "2SLS", "2SLS", "2SLS", "2SLS", "2SLS"))
+
+# Settign the 90% and 95% confidence intervals 
+
+interval1 <- -qnorm((1-0.90)/2)  
+interval2 <- -qnorm((1-0.95)/2)  
+
+# The authors used this to set a dodge position for 
+# the graph. I used it too. 
+
+pd = position_dodge(0.5)
+
+# Now its the ggplot code that makes everything look good. 
+# Nothing crazy here to be honest. I just used the author's code
+# and fitted it to my needs. 
+
+figure2 <- ggplot(allModelFrame2, aes(shape=test)) + 
+  geom_hline(yintercept = 0, colour = gray(1/2), lty = 2) + 
+  geom_linerange(aes(x = Variable, ymin = Coefficient - SE*interval1,
+                     ymax = Coefficient + SE*interval1),
+                 lwd = 1, position = pd) + 
+  geom_linerange(aes(x = Variable, ymin = Coefficient - SE*interval2,
+                     ymax = Coefficient + SE*interval2),
+                 lwd = 1/4, position = pd) + 
+  geom_point(aes(x = Variable, y = Coefficient, shape = test),
+             position = pd,fill = "WHITE", size = 3) + 
+  coord_flip(ylim = c(-1.5,1.5)) + theme_bw() + 
+  theme(legend.position="bottom") + 
+  scale_shape_manual(values = c(23, 24, 25), name ="") +
+  ylab("")  + xlab("") +     
+  theme(text = element_text(size=12))
+```
+
+\begin{center}
+\textbf{Model 2: Kyrgyz Prosocial Behavior with Instrumental Variable}
+
+```{r Output Prosocial Kyrgyz Instrument, fig.align="center"}
+
+# Printing.
+
+figure2
+```
+
+\end{center}
