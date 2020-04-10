@@ -12,6 +12,8 @@ The various datasets can be found under the file called "Data", but this data fi
 
 My code for both my extensions and my replications of the relevant original figures can be found under the "Code" file. 
 
+The code for the shiny app can be found under the "Website File".
+
 # About Me
 
 My name is Cian Stryker and I am a graduate student at Harvard University. I am pursuing a Master’s in Russian, Eastern European, and Central Asian studies with a focus on the Digital Silk Road, or the technological aspects of the Belt and Road Initiative. I am especially interested in the digital expansion of Chinese technology and data management systems in Central Asia. This replication was the final project for my ‘Models’ class at Harvard (GOV 1006).
