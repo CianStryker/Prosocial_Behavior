@@ -6,13 +6,13 @@ In my paper I discuss the original authors' findings and place their theoretical
 
 # File Guide
 
-The paper itself is listed as simply "Paper". 
+- The paper itself is listed as simply "Paper". 
 
-The various datasets can be found under the file called "Data", but this data first and foremost belongs to the original authors. 
+- The various datasets can be found under the file called "Data", but this data first and foremost belongs to the original authors. 
 
-My code for both my extensions and my replications of the relevant original figures can be found under the "Code" file. 
+- My code for both my extensions and my replications of the relevant original figures can be found under the "Code" file. 
 
-The code for the shiny app can be found under the "Website File".
+- The code for the shiny app can be found under the "Website File".
 
 # About Me
 
