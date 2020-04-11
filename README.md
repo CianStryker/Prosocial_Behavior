@@ -24,4 +24,4 @@ My name is Cian Stryker and I am a graduate student at Harvard University. I am 
                                
 # Other Information
 
-The author's original paper can also be accessed [here](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/B87A1F338F521174C8FEB51294AAE00C/S000305541900042Xa.pdf/ethnic_riots_and_prosocial_behavior_evidence_from_kyrgyzstan.pdf). In addition, thier original data and code can be found [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE)
+The author's original paper can also be accessed [here](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/B87A1F338F521174C8FEB51294AAE00C/S000305541900042Xa.pdf/ethnic_riots_and_prosocial_behavior_evidence_from_kyrgyzstan.pdf). In addition, their original data and code can be found [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE)
