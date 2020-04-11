@@ -4,7 +4,7 @@ This is my replication of the paper "Ethnic Riots and Prosocial Behavior: Eviden
 
 In my paper I discuss the original authors' findings and place their theoretical model within the literature on ethnic violence and the 2010 Osh riots. I then expand on certain areas of their work that I believe warranted additional attention. Namely, I found that the effects of victimization on Kyrgyz resulted in different prosocial outcomes than the victimized Uzbeks. Kyrgyz who were exposed to violence in the riots expressed positive prosocial behavior towards Uzbeks (the out-group), This somewhat complicates the original authors' conclusions, but I believe this effect is important to note for understanding the larger effects of ethnic violence. 
 
-My paper can be found within this repo or can also be viewed here: https://cianstryker.shinyapps.io/Replication/
+My paper can be found within this repo or can also be viewed online [here](https://cianstryker.shinyapps.io/Replication/)
 
 # Repo Guide
 
@@ -24,6 +24,4 @@ My name is Cian Stryker and I am a graduate student at Harvard University. I am 
                                
 # Other Information
 
-The author's original paper can also be accessed here: https://www.cambridge.org/core/services/aop-cambridge-core/content/view/B87A1F338F521174C8FEB51294AAE00C/S000305541900042Xa.pdf/ethnic_riots_and_prosocial_behavior_evidence_from_kyrgyzstan.pdf
-
-The author's original data and code can also be found here: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE
+The author's original paper can also be accessed [here](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/B87A1F338F521174C8FEB51294AAE00C/S000305541900042Xa.pdf/ethnic_riots_and_prosocial_behavior_evidence_from_kyrgyzstan.pdf). In addition, thier original data and code can be found [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE)
