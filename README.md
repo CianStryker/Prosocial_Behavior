@@ -8,15 +8,15 @@ My paper can be found within this repo or can also be viewed here: https://cians
 
 # Repo Guide
 
-- The paper itself is simply listed as "Paper". This includes both the pdf and the rmarkdown page.
+- The paper itself is simply listed as "Paper". This includes both the pdf and the rmarkdown page. Note: My "Paper.rmd" file does not include the code for my replications. See the "Appendix" file for that code. 
 
-- The various datasets can be found under the file called "Data", but all data first and foremost belongs to the original authors. 
+- The datasets I used for my replication can be found under the file called "Data".
 
 - My code for both my extensions and my replications of the relevant original figures can be found under the "Appendix" file. 
 
-- The author's original paper, original code for the relevant figures, and thier additional dataset can be found under the "Original Paper and Code" file. 
+- The author's original paper, original appendix, original code for all figures, and all of thier original datasets can be found under the "Original Paper and Code" file. 
 
-- The code for the shiny app can be found under the "Website File".
+- The code for my shiny app can be found under the "Website" File.
 
 # About Me
 
