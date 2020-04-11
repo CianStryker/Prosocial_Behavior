@@ -12,7 +12,9 @@ My paper can be found within this repo or can also be viewed here: https://cians
 
 - The various datasets can be found under the file called "Data", but all data first and foremost belongs to the original authors. 
 
-- My code for both my extensions and my replications of the relevant original figures can be found under the "Code" file. 
+- My code for both my extensions and my replications of the relevant original figures can be found under the "Appendix" file. 
+
+- The author's original paper, original code for the relevant figures, and thier additional dataset can be found under the "Original Paper and Code" file. 
 
 - The code for the shiny app can be found under the "Website File".
 
