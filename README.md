@@ -8,7 +8,7 @@ My paper can be found within this repo or can also be viewed online [here](https
 
 # Repo Guide
 
-- The paper itself is simply listed as "Paper". This includes both the pdf and the rmarkdown page. Note: My "Paper.rmd" file does not include the code for my replications. See the "Appendix" file for that code. 
+- The paper itself is listed as "Stryker_Prosocial_Behavior" and can be found in the main repo page. The markdown file for the paper is listed under the same name, but does not include the code for my replication's of the authors' original models. See the "Appendix" file for that code. 
 
 - The datasets I used for my replication can be found under the file called "Data".
 
