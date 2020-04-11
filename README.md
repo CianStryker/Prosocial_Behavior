@@ -6,7 +6,7 @@ In my paper I discuss the original authors' findings and place their theoretical
 
 My paper can be found within this repo or can also be viewed here: https://cianstryker.shinyapps.io/Replication/
 
-# File Guide
+# Repo Guide
 
 - The paper itself is simply listed as "Paper". This includes both the pdf and the rmarkdown page.
 
