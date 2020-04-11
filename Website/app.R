@@ -11,7 +11,7 @@ ui <- fluidPage(theme = shinytheme("slate"),
                 
                 tabPanel("Paper",
                          tags$iframe(style="height:1000px; width:100%; scrolling=yes",
-                                     src = "Paper.pdf")),
+                                     src = "Stryker_Prosocial_Behavior.pdf")),
                 
                 tabPanel(
                     
