@@ -2,9 +2,12 @@
 library(shiny)
 library(shinythemes)
 
-# Define UI for application that draws a histogram
+# Define UI for the application. 
+
 ui <- fluidPage(theme = shinytheme("slate"),
 
+            # All standard shiny code below. 
+            
             navbarPage(
                 
                 title = 'Replication of "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan"',
@@ -36,13 +39,9 @@ ui <- fluidPage(theme = shinytheme("slate"),
                                
                                tags$h1("Source Code"), 
                                
-                               tags$p("Here is the link to my Github page for this project:", a(href = "https://github.com/CianStryker/Replication_Data", "https://github.com/CianStryker/Replication_Data")),
+                               tags$p("Here is the link to my Github page for this project:", a(href = "https://github.com/CianStryker/Replication_Data", "https://github.com/CianStryker/Replication_Data"))
                                
-                               tags$h1("Note"), 
-                               
-                               tags$p('Sometimes the pdf will fail to load if you spend too much time on the "About" tab , but just refresh the overall page and it will reload successfully.') 
-                               
-                               
+
                         ),
                         
                         column(width= 3)
@@ -56,8 +55,7 @@ ui <- fluidPage(theme = shinytheme("slate"),
         
 )    
 
-
-# Define server logic required to draw a histogram
+# Default code
 server <- function(input, output) {
 
 }
