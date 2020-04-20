@@ -12,7 +12,7 @@ My paper can be found within this repo or can also be viewed online [here](https
 
 - The datasets I used for my replication can be found under the file called "Data".
 
-- My code for both my extensions and my replications of the relevant original figures can be found under the "Appendix" file. 
+- The code for both my extensions and my replications of the relevant original figures can be found under the "Appendix" file. A screenshot of one of the original figures (Figure 5) is also included in this file for comparison. 
 
 - The author's original paper, original appendix, original code for all figures, and all of thier original datasets can be found under the "Original Paper and Code" file. 
 
