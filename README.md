@@ -1,9 +1,7 @@
 # Replication Project
 
-This is my replication of the paper "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan" written by Anselm Hager, Krzysztof Krakowski, and Max Schaub. Using survey data gathered in Osh, Kyrgyzstan after the 2010 ethnic riots that includes 1200 responses, this paper explored the question of whether exposure to ethnic riots has a negative effect on both in and out group prosocial behavior. Their conclusion was that exposure to violence during this riot negatively affected prosocial behavior to both the in and out-groups. 
-
-In my paper I discuss the original authors' findings and place their theoretical model within the literature on ethnic violence and the 2010 Osh riots. I then expand on certain areas of their work that I believe warranted additional attention. Namely, I found that the effects of victimization on Kyrgyz resulted in different prosocial outcomes than the victimized Uzbeks. Kyrgyz who were exposed to violence in the riots expressed positive prosocial behavior towards Uzbeks (the out-group), This somewhat complicates the original authors' conclusions, but I believe this effect is important to note for understanding the larger effects of ethnic violence. 
-
+This is my replication of the paper "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan" written by Anselm Hager, Krzysztof Krakowski, and Max Schaub. They find that exposure to ethnic violence negatively affects prosocial behavior within and across ethnic groups in Osh, Kyrgyzstan. I was largely successful in replicating their main results and use their survey data of Kyrgyz and Uzbeks—the majority and minority ethnic groups of Osh—to expand upon their work. I find that the prosocial behavior of Kyrgyz towards Uzbeks is partially positively affected by exposure to violence. These results contradict the authors’ original findings that exposure to ethnic violence has a homogenous treatment effect. My models demonstrate that on the contrary, ethnic violence can have a heterogenous treatment effect, which warrants further analysis of ethnic violence’s influence on interethnic relations.
+ 
 My paper can be found within this repo or can also be viewed online [here](https://cianstryker.shinyapps.io/Replication/)
 
 # Repo Guide
@@ -12,7 +10,7 @@ My paper can be found within this repo or can also be viewed online [here](https
 
 - The datasets I used for my replication can be found under the file called "Data".
 
-- My code for both my extensions and my replications of the relevant original figures can be found under the "Appendix" file. 
+- The code for both my extensions and my replications of the relevant original figures can be found under the "Appendix" file. A screenshot of one of the original figures (Figure 5) is also included in this file for comparison. 
 
 - The author's original paper, original appendix, original code for all figures, and all of thier original datasets can be found under the "Original Paper and Code" file. 
 
