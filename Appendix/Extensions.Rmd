@@ -21,7 +21,7 @@ library(spatialreg)
 
 # My loading code. 
 
-load("~/Replication_Project/Data/kyrgyzstan.RData")
+load("~/Prosocial_Behavior_Replication_Project/Appendix/Appendix_Data/kyrgyzstan.RData")
 data <- table
 
 # Shifting the victimization dummy to integer and switching 
