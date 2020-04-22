@@ -56,10 +56,10 @@ This paper will include of a review of the relevant literature for understanding
 
 [^1]: Hager, Krakowski, and Schaub 2019
 [^2]: R Core Team (2019)
-[^3]: \href{https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE}{{\color{blue}{\underline{Original Paper's Code}}}}
-[^4]: \href{https://github.com/CianStryker/Prosocial_Behavior}{{\color{blue}{\underline{Replication Github}}}}
-[^5]:  \href{https://static.cambridge.org/content/id/urn:cambridge.org:id:article:S000305541900042X/resource/name/S000305541900042Xsup001.pdf}{{\color{blue}{\underline{Original Paper's Appendix}}}}
-[^6]: \href{https://github.com/CianStryker/Prosocial_Behavior}{{\color{blue}{\underline{Replication Github}}}}
+[^3]: Original Paper's Code:  \href{https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE}{{\underline{Link}}}
+[^4]: Replication Github: \href{https://github.com/CianStryker/Prosocial_Behavior}{{\underline{Link}}}
+[^5]:  Original Paper's Appendix:  \href{https://static.cambridge.org/content/id/urn:cambridge.org:id:article:S000305541900042X/resource/name/S000305541900042Xsup001.pdf}{{\underline{Link}}}
+[^6]: Replication Github:  \href{https://github.com/CianStryker/Prosocial_Behavior}{{\underline{Link}}}
 
 
 
@@ -131,7 +131,7 @@ I believe the author’s exploration of confounding variables for Uzbeks is some
 
 # My loading code. 
 
-load("~/Prosocial_Behavior_Replication_Project/Data/kyrgyzstan.RData")
+load("Data/kyrgyzstan.RData")
 data <- table
 
 # Shifting the victimization dummy to integer and switching 
