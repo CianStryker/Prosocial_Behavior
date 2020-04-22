@@ -771,7 +771,7 @@ figure1
 
 \end{center}
 
-Model 1 consists of OLS regressions measuring Kyrgyz prosocial behavior as the result of victimization. The most noteworthy result is that the prisoner’s dilemma outgroup coefficient is positive. This suggests that Kyrgyz who were affected by the riots on average have higher levels of prosocial behavior towards Uzbeks. The variance is fairly high, but the positive nature of the coefficient is constant. For the other measures, the coefficients are negative like the author’s Figure 5, but noticeably less strong. This suggests that prosocial behavior did not universally decrease for Kyrgyz and that at least for the prisoner’s dilemma, which is a measure of cooperation, affected Kyrgyz are more willing to cooperate with Uzbeks than non-affected Kyrgyz.
+Model 1 consists of OLS regressions measuring Kyrgyz prosocial behavior as the result of victimization. Model 1's plot point estimates (dot) and 90/95% confidence intervals(thick and think lines, respectivley) show the coefficients of the OLS regressions. The most noteworthy result is that the prisoner’s dilemma outgroup coefficient is positive. This suggests that Kyrgyz who were affected by the riots on average have higher levels of prosocial behavior towards Uzbeks. The variance is fairly high, but the positive nature of the coefficient is constant. For the other measures, the coefficients are negative like the author’s Figure 5, but noticeably less strong. This suggests that prosocial behavior did not universally decrease for Kyrgyz and that at least for the prisoner’s dilemma, which is a measure of cooperation, affected Kyrgyz are more willing to cooperate with Uzbeks than non-affected Kyrgyz.
 
 \pagebreak
 
@@ -823,7 +823,7 @@ figure2
 \end{center}
 
 
-Model 2 further tests the robustness of Model 1’s results by introducing the instrumental variable of distance to APC. Model 2 shows both the instrument’s OLS regression, where the destruction dummy is replaced by the closeness instrument, and 2SLS coefficients, where the destruction dummy is instrumented with APC location. The results show that both the instrument OLS regression sand 2SLS coefficients for PD out-group are positive, which means that instrumented-victimization has a positive, causal effect on prosocial behavior towards the out-group. After viewing the other coefficients, it is clear that the other measures are overall still negative, but their variances now include positive coefficients. This is contradictory to both the authors’ Figure 5 findings and their overall argument.   
+Model 2 further tests the robustness of Model 1’s results by introducing the instrumental variable of distance to APC. Model 2's plot point estimates (dot) and 90/95% confidence intervals(thick and think lines, respectivley) show both the instrument’s OLS regression, where the destruction dummy is replaced by the closeness instrument, and 2SLS coefficients, where the destruction dummy is instrumented with APC location. The results show that both the instrument OLS regression sand 2SLS coefficients for PD out-group are positive, which means that instrumented-victimization has a positive, causal effect on prosocial behavior towards the out-group. After viewing the other coefficients, it is clear that the other measures are overall still negative, but their variances now include positive coefficients. This is contradictory to both the authors’ Figure 5 findings and their overall argument.   
 
 
 
