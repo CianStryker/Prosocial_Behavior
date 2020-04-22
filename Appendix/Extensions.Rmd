@@ -21,7 +21,7 @@ library(spatialreg)
 
 # My loading code. 
 
-load("Appendix/Appendix_Data/kyrgyzstan.RData")
+load("Appendix_Data/kyrgyzstan.RData")
 data <- table
 
 # Shifting the victimization dummy to integer and switching 

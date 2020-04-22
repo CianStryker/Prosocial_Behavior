@@ -25,7 +25,7 @@ library(tidyverse)
 
 # My loading code. 
 
-load("Appendix/Appendix_Data/kyrgyzstan.RData")
+load("Appendix_Data/kyrgyzstan.RData")
 data <- table
 
 ```
@@ -457,7 +457,7 @@ instrument <- lm(cooperation_index ~ distance , data = data_uzbek)
 # the distance data they chose for that. Their note says 
 # "Insheet distances from any given PSU to 9500 randomly chosen APC locations"
 
-DistMat <- as.data.frame(read.csv("Appendix/Appendix_Data/distances_ri.csv", header = TRUE, sep =","))[-1]
+DistMat <- as.data.frame(read.csv("Appendix_Data/distances_ri.csv", header = TRUE, sep =","))[-1]
 
 # So every column in DistMat has an X in it. Here they really just want
 # to get rid of those. 
@@ -479,7 +479,7 @@ DistMat <- DistMat[, sample_psus]
 # were east of the Akbuura river or not. This is them loading it in 
 # and then adding it to their other data. 
 
-eoa <- as.data.frame(read.csv("Appendix/Appendix_Data/ri_east_of_akbuura.csv", header = TRUE))[2]
+eoa <- as.data.frame(read.csv("Appendix_Data/ri_east_of_akbuura.csv", header = TRUE))[2]
 DistMat$eoa <-eoa
 
 # Now they want to create matrices of whether the locations were
