@@ -14,7 +14,7 @@ My paper can be found within this repo or can also be viewed online [here](https
 
 - The author's original paper, original appendix, original code for all figures, and all of thier original datasets can be found under the "Original Paper and Code" file. 
 
-- The code for my shiny app can be found under the "Website" File.
+- The code for my shiny app can be found under the "Replication" File.
 
 # About Me
 
