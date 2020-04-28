@@ -1,0 +1,12 @@
+name: Replication
+title: Replication
+username:
+account: cianstryker
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2097466
+bundleId: 3078056
+url: https://cianstryker.shinyapps.io/Replication/
+when: 1588099298.57129
+asMultiple: FALSE
+asStatic: FALSE
