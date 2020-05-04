@@ -13,8 +13,8 @@ ui <- fluidPage(theme = shinytheme("slate"),
                 title = 'Replication of "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan"',
                 
                 tabPanel("Paper",
-                         tags$iframe(style="height:1000px; width:100%; scrolling=yes",
-                                     src = "Stryker_Prosocial_Behavior.pdf")),
+                         uiOutput("myPaper")
+                         ),
                 
                 tabPanel(
                     
@@ -57,6 +57,14 @@ ui <- fluidPage(theme = shinytheme("slate"),
 
 # Default code
 server <- function(input, output) {
+  
+  output$myPaper <- renderUI({
+    PDFfile="Stryker_Prosocial_Behavior.pdf"
+    tags$iframe(
+      src="Stryker_Prosocial_Behavior.pdf",
+      width="100%",
+      height="1000px")
+  })
 
 }
 
