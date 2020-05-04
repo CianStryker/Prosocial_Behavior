@@ -46,7 +46,7 @@ ui <- fluidPage(theme = shinytheme("slate"),
                                   
                                   tags$p('The original paper for this replication project is "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan" written by Anselm Hager, Krzysztof Krakowski, and Max Schaub. The map of Kyrgyzstan featured above is also taken from this paper.'), 
                                   
-                                  tags$p("The original data can be found", a(href = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE", "here")),
+                                  tags$p("The original data can be found", a(href = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE", "here.")),
                                   
                                   tags$h1("About me"), 
                                   
