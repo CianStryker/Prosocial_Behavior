@@ -25,7 +25,7 @@ ui <- fluidPage(theme = shinytheme("slate"),
                                   
                                   tags$h1("Replication Paper"), 
                                   
-                                  tags$p("This replication and extension is my final project for GOV 1006 'Models' at Harvard University. If you are on a desktop or laptop then you can view the paper under the 'Paper' tab at the top of this page. Note, however, that this shinyapp is not mobile friendly, so if you are using a mobile device then please download the pdf", downloadLink("downloadPDF", "here."))
+                                  tags$p("This replication and extension is my final project for GOV 1006 'Models' at Harvard University. If you are on a desktop or laptop then you can view the paper under the 'Paper' tab at the top of this page. Note, however, that this shinyapp is not mobile friendly, so if you are using a mobile device then please download the pdf here:", downloadLink("downloadPDF", "Download Link"))
                                   
                                   
                                   
@@ -46,7 +46,7 @@ ui <- fluidPage(theme = shinytheme("slate"),
                                   
                                   tags$p('The original paper for this replication project is "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan" written by Anselm Hager, Krzysztof Krakowski, and Max Schaub. The map of Kyrgyzstan featured above is also taken from this paper.'), 
                                   
-                                  tags$p("The original data can be found here :", a(href = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE", "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE")),
+                                  tags$p("The original data can be found here:", a(href = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE", "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WVBZNE")),
                                   
                                   tags$h1("About me"), 
                                   
