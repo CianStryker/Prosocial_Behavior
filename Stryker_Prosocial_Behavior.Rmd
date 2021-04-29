@@ -580,7 +580,7 @@ figure2 <- ggplot(allModelFrame2, aes(shape=test)) +
 
 ```{r Output Prosocial Kyrgyz Instrument, fig.align="center", fig.width = 5, fig.height= 4}
 
-# Printing.
+# Printing
 
 figure2
 ```

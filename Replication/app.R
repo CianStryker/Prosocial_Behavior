@@ -1,46 +1,43 @@
 
 library(shiny)
-library(shinythemes)
-library(readr)
+library(bslib)
 library(tidyverse)
 
 # Define UI for the application. 
 
-ui <- fluidPage(theme = shinytheme("slate"),
+ui <- fluidPage(theme = bs_theme(bootswatch = "sandstone"),
 
             # All standard shiny code below. 
             
             navbarPage(
-                
                 title = 'Replication of "Ethnic Riots and Prosocial Behavior: Evidence from Kyrgyzstan"',
                 
-                tabPanel("Introduction",
-                         fluidRow(
-                           
-                           column(width = 3),
-                           
-                           column(width = 6,
-                                  
-                                  imageOutput(outputId = "Picture", width = "100%", height = "100%"),
-                                  
-                                  tags$h1("Replication Paper"), 
-                                  
-                                  tags$p("This replication and extension is my final project for GOV 1006 'Models' at Harvard University. If you are on a desktop or laptop then you can view the paper under the 'Paper' tab at the top of this page. Note, however, that this shinyapp is not mobile friendly, so if you are using a mobile device then please download the pdf here:", downloadLink("downloadPDF", "Download Link"))
-                                  
-                                  
-                                  
-                           ),
-                           
-                           column(width = 3)
-                           
-                         ),
+                tabPanel(
+                  
+                  title = "Introduction",
                          
                          fluidRow(
                            
-                           column(width = 3),
+                           column(width = 2),
                            
-                           column(width = 6,
+                           column(width = 8,
                                   
+                                  imageOutput(outputId = "Picture", width = "100%", height = "100%")),
+                           
+                           column(width = 2)
+                           
+                         ),
+                           
+                        fluidRow(
+                          
+                          column(width = 3), 
+                          
+                          column(width = 6, 
+                      
+                                  
+                                  tags$h1("Replication Paper"), 
+                                  
+                                  tags$p("This replication and extension is my final project for GOV 1006 'Models' at Harvard University. If you are on a desktop or laptop then you can view the paper under the 'Paper' tab at the top of this page. Note, however, that this shinyapp is not mobile friendly, so if you are using a mobile device then please click on the Mobile Reader tab. If you would like to download the pdf, please click here:", downloadLink("downloadPDF", "Download Link")),
                                   
                                   tags$h1("Original Paper"), 
                                   
@@ -64,11 +61,13 @@ ui <- fluidPage(theme = shinytheme("slate"),
                          
                 ),
                 
-                tabPanel("Paper",
+                tabPanel(title = HTML("<li>Paper"),
                          
                          
                          uiOutput("myPaper")
-                         )
+                         ),
+                
+                tabPanel(title = HTML("<li><a href='Stryker_Prosocial_Behavior.pdf'target='_self'>Mobile Reader"))
                 
 
                         
